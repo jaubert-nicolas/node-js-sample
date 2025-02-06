@@ -9,5 +9,8 @@ workflows:
     jobs:
       - docker/publish:
           image: $DOCKERHUB_USERNAME/nodecicd
+          tag:  latest
+          docker-username: $DOCKERHUB_USERNAME
+          docker-password: $DOCKERHUB_PASSWORD
 
 
