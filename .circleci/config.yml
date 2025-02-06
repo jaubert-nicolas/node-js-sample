@@ -21,6 +21,15 @@ jobs:
           name: Test Application Endpoint
           command: |
             curl --fail http://localhost:8080/ || exit 1
+      - run:
+          name: Tag Docker Image for Docker Hub
+          command: docker tag nodecicd $DOCKERHUB_USERNAME/nodecicd:latest
+      - run:
+          name: Log in to Docker Hub
+          command: echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+      - run:
+          name: Push Docker Image to Docker Hub
+          command: docker push $DOCKERHUB_USERNAME/nodecicd:latest
 
 workflows:
   version: 2
