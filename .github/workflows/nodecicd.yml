@@ -3,7 +3,7 @@ name: Build and Test Dockerized Node.js App
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
 
 jobs:
