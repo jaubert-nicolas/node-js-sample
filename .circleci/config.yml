@@ -29,6 +29,7 @@ jobs:
       - docker/publish:
           image: $DOCKERHUB_USERNAME/nodecicd
           tag: latest
+          use-docker-credentials-store: true
 
 workflows:
   version: 2
