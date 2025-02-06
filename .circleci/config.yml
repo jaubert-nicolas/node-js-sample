@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  docker: circleci/docker@2.3.0
+  docker: circleci/docker@2.4.0
 
 jobs:
   build_and_test:
@@ -15,12 +15,14 @@ jobs:
           image: $DOCKERHUB_USERNAME/nodecicd
           tag: latest
 
+      - docker/auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
+
       # Push the Docker image using the Docker orb (only if tests pass)
       - docker/push:
           image: $DOCKERHUB_USERNAME/nodecicd
           tag: latest
-          username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_PASSWORD
 
 workflows:
   version: 2
