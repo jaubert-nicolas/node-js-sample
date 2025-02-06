@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  docker: circleci/docker@2.8.2
+  docker: circleci/docker@2.3.0
 
 jobs:
   build_and_test:
@@ -14,16 +14,6 @@ jobs:
       - docker/build:
           image: $DOCKERHUB_USERNAME/nodecicd
           tag: latest
-
-      # Run the container
-      - run:
-          name: Run Docker Container
-          command: docker run -d -p 8080:8080 --name test-container $DOCKERHUB_USERNAME/nodecicd:latest
-
-      # Wait for the service to start
-      - run:
-          name: Wait for Service to Start
-          command: sleep 5
 
       # Push the Docker image using the Docker orb (only if tests pass)
       - docker/push:
