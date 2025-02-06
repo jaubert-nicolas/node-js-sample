@@ -1,0 +1,39 @@
+name: Build and Test Dockerized Node.js App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: docker build -t nodecicd .
+
+      - name: Run Docker Container
+        run: |
+          docker run -d -p 8080:8080 --name test-container nodecicd
+
+      - name: Wait for Service to Start
+        run: sleep 5  # Allow time for startup
+
+      - name: Test Application Endpoint
+        run: |
+          curl --fail http://localhost:8080/ || exit 1
+
+      - name: Tag Docker Image for Docker Hub
+        run: docker tag nodecicd ${{ secrets.DOCKERHUB_USERNAME }}/nodecicd:latest
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Push Docker Image to Docker Hub
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/nodecicd:latest
+
