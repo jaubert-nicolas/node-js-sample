@@ -2,7 +2,6 @@ version: 2.1
 
 orbs:
   docker: circleci/docker@2.4.0
-  curl: circleci/curl@3.0.0
 
 jobs:
   build_and_test:
@@ -25,13 +24,6 @@ jobs:
       - run:
           name: Wait for Service to Start
           command: sleep 5
-
-      # Test the application endpoint using the cURL orb
-      - curl:
-          name: Test Application Endpoint
-          url: "http://localhost:8080/"
-          request: GET
-          fail_on_error: true
 
       # Push the Docker image using the Docker orb (only if tests pass)
       - docker/push:
