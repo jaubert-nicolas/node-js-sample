@@ -1,40 +1,46 @@
 version: 2.1
 
+orbs:
+  docker: circleci/docker@2.4.0
+  curl: circleci/curl@3.0.0
+
 jobs:
   build_and_test:
     machine:
       image: ubuntu-2204:current
     steps:
       - checkout
-      - run:
-          name: Build Docker Image
-          command: docker build -t nodecicd .
+
+      # Build the Docker image using the Docker orb
+      - docker/build:
+          image: $DOCKERHUB_USERNAME/nodecicd
+          tag: latest
+
+      # Run the container
       - run:
           name: Run Docker Container
-          command: |
-            docker run -d -p 8080:8080 --name test-container nodecicd
+          command: docker run -d -p 8080:8080 --name test-container $DOCKERHUB_USERNAME/nodecicd:latest
+
+      # Wait for the service to start
       - run:
           name: Wait for Service to Start
-          command: |
-            sleep 5  # Give the container time to start
-      - run:
-          name: Test Application Endpoint
-          command: |
-            curl --fail http://localhost:8080/ || exit 1
-      - run:
-          name: Tag Docker Image for Docker Hub
-          command: docker tag nodecicd $DOCKERHUB_USERNAME/nodecicd:latest
-      - run:
-          name: Log in to Docker Hub
-          command: echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-      - run:
-          name: Push Docker Image to Docker Hub
-          command: docker push $DOCKERHUB_USERNAME/nodecicd:latest
+          command: sleep 5
 
+      # Test the application endpoint using the cURL orb
+      - curl:
+          name: Test Application Endpoint
+          url: "http://localhost:8080/"
+          request: GET
+          fail_on_error: true
+
+      # Push the Docker image using the Docker orb (only if tests pass)
+      - docker/push:
+          image: $DOCKERHUB_USERNAME/nodecicd
+          tag: latest
 
 workflows:
   version: 2
-  test:
+  test_and_deploy:
     jobs:
       - build_and_test
 
