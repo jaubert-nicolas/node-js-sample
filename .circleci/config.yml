@@ -26,7 +26,7 @@ jobs:
           command: sleep 5
 
       # Push the Docker image using the Docker orb (only if tests pass)
-      - docker/push:
+      - docker/publish:
           image: $DOCKERHUB_USERNAME/nodecicd
           tag: latest
 
