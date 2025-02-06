@@ -13,7 +13,7 @@ jobs:
       - run:
           name: Run Docker Container
           command: |
-            docker run -d -p 8000:8000 --name test-container nodecicd
+            docker run -d -p 8080:8080 --name test-container nodecicd
       - run:
           name: Wait for Service to Start
           command: |
@@ -21,7 +21,7 @@ jobs:
       - run:
           name: Test Application Endpoint
           command: |
-            curl --fail http://localhost:8000/expected-route || exit 1
+            curl --fail http://localhost:8080/expected-route || exit 1
 
 workflows:
   version: 2
