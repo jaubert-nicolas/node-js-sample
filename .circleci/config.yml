@@ -26,10 +26,11 @@ jobs:
           command: sleep 5
 
       # Push the Docker image using the Docker orb (only if tests pass)
-      - docker/publish:
+      - docker/push:
           image: $DOCKERHUB_USERNAME/nodecicd
           tag: latest
-          use-docker-credentials-store: true
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
 
 workflows:
   version: 2
