@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build_and_test:
     machine:
-      - image: ubuntu-2024:current
+      image: ubuntu-2024:current
     steps:
       - checkout
       - run:
