@@ -10,3 +10,22 @@ jobs:
       - run:
           name: Build Docker Image
           command: docker build -t nodecicd .
+      - run:
+          name: Run Docker Container
+          command: |
+            docker run -d -p 8000:8000 --name test-container nodecicd
+      - run:
+          name: Wait for Service to Start
+          command: |
+            sleep 5  # Give the container time to start
+      - run:
+          name: Test Application Endpoint
+          command: |
+            curl --fail http://localhost:8000/expected-route || exit 1
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - build_and_test
+
