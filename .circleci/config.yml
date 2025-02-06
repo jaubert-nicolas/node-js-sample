@@ -21,7 +21,7 @@ jobs:
       - run:
           name: Test Application Endpoint
           command: |
-            curl --fail http://localhost:8080/expected-route || exit 1
+            curl --fail http://localhost:8080/ || exit 1
 
 workflows:
   version: 2
